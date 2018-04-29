@@ -26,8 +26,8 @@ public class MouseInput extends MouseInputAdapter {
 	public void mousePressed(MouseEvent event) {
 			xOldSquare = event.getX()/65;
 			yOldSquare = event.getY()/65;
-			
-			
+			model.getBoard().findPiece(xOldSquare, yOldSquare).toggleSelected();
+			controller.updateCustom();
 	}
 	@Override
 	public void mouseDragged(MouseEvent event) {
@@ -40,6 +40,7 @@ public class MouseInput extends MouseInputAdapter {
 	        int ySquare = event.getY()/65;
 	        //System.out.println(xSquare + "," + ySquare);
 	        if(-1<xSquare && xSquare<8 && ySquare>-1 && ySquare<8 && !(xOldSquare==xSquare && yOldSquare==ySquare)){
+	        	model.getBoard().findPiece(xOldSquare, yOldSquare).toggleSelected();
 	        	model.movePiece(xOldSquare,yOldSquare,xSquare,ySquare);
 	        	controller.updateCustom();
 	        }

@@ -6,12 +6,14 @@ public class Piece {
 	protected int x;
 	protected int y;
 	protected boolean hasMoved;
+	protected boolean selected;
 	public Piece(Color c, String t,int x,int y){
 		color = c;
 		type = t;
 		this.x = x;
 		this.y = y;
 		hasMoved = false;
+		selected = false;
 		
 	}
 	
@@ -50,5 +52,16 @@ public class Piece {
 	}
 	public void setY(int n){
 		y= n;
+	}
+	
+	public boolean isSelected(){
+		return selected;
+	}
+	public void toggleSelected(){
+		if(selected){
+			selected = false;
+		}else{
+			selected = true;
+		}
 	}
 }

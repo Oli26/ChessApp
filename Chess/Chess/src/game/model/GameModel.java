@@ -43,29 +43,35 @@ public class GameModel extends Observable {
 	}
 	
 	
-	public void movePiece(int x1,int y1, int x2, int y2){
+	public String movePiece(int x1,int y1, int x2, int y2){
 		System.out.println("movePiece requested! ");
 		if(move == Color.WHITE){
 			System.out.println("Turn = White");
 			if(board.isFilled(x1,y1) && board.findPiece(x1, y1).getColor() != Color.WHITE){
-				return;
+				return "IncorrectColor";
 			}
 			board.tempMovePiece(x1,y1,x2,y2);
-			if(isWhiteInCheck()){
+			Piece checkPiece = isWhiteInCheck();
+			if(!(checkPiece == null)){
 				board.undoTempMovePiece(x1, y1, x2, y2);
-				return;
+				if(!checkPiece.isSelected())
+					checkPiece.toggleSelected();
+				return ("InCheck from ("+ checkPiece.getX()+ ","+checkPiece.getY() + ")");
 			}else{
 				board.undoTempMovePiece(x1, y1, x2, y2);
 			}
 		}else{
 			System.out.println("Turn = Black");
 			if(board.isFilled(x1,y1) && board.findPiece(x1, y1).getColor() != Color.BLACK){
-				return;
+				return "IncorrectColor";
 			}
 			board.tempMovePiece(x1,y1,x2,y2);
-			if(isBlackInCheck()){
+			Piece checkPiece = isBlackInCheck();
+			if(!(checkPiece == null)){
 				board.undoTempMovePiece(x1, y1, x2, y2);
-				return;
+				if(!checkPiece.isSelected())
+					checkPiece.toggleSelected();
+				return ("InCheck from ("+ checkPiece.getX()+ ","+checkPiece.getY() + ")");
 			}else{
 				board.undoTempMovePiece(x1, y1, x2, y2);
 			}
@@ -172,7 +178,7 @@ public class GameModel extends Observable {
 				}else{
 					move = Color.WHITE;
 				}
-				return;
+				return "Castled!";
 			}	
 			
 		}
@@ -196,6 +202,7 @@ public class GameModel extends Observable {
 		}else{
 			System.out.println("Move requested and not allowed!");
 		}
+		return "Moved";
 		
 	}
 	
@@ -353,7 +360,7 @@ public class GameModel extends Observable {
 		return true;
 	}
 	
-	boolean isBlackInCheck(){
+	Piece isBlackInCheck(){
 		Set whiteSet = board.getSet(Color.WHITE);
 		Set blackSet = board.getSet(Color.BLACK);
 		Piece king = blackSet.getKing();
@@ -361,13 +368,13 @@ public class GameModel extends Observable {
 		for(int i=0;i<whiteSet.size();i++){
 				tempPiece = whiteSet.getPiece(i);
 				if(allowedMove(tempPiece.getX(),tempPiece.getY(),king.getX(),king.getY())){
-					return true;
+					return tempPiece;
 				}
 		}
-		return false;
+		return null;
 	}
 	
-	boolean isWhiteInCheck(){
+	Piece isWhiteInCheck(){
 		Set whiteSet = board.getSet(Color.WHITE);
 		Set blackSet = board.getSet(Color.BLACK);
 		Piece king = whiteSet.getKing();
@@ -375,10 +382,10 @@ public class GameModel extends Observable {
 		for(int i=0;i<blackSet.size();i++){
 				tempPiece = blackSet.getPiece(i);
 				if(allowedMove(tempPiece.getX(),tempPiece.getY(),king.getX(),king.getY())){
-					return true;
+					return tempPiece;
 				}
 		}
-		return false;
+		return null;
 	}
 		
 	void checkPawns(Color c){

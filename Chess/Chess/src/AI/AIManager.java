@@ -31,8 +31,40 @@ public class AIManager {
 	
 	public void move(){
 		Move move = generateMove();
-		model.movePiece(move.x1, move.y1, move.x2, move.y2);
+		String result =model.movePiece(move.x1, move.y1, move.x2, move.y2);
+		if(result.contains("InCheck")){
+			inCheckMove(result);
+		}
+	}
+	
+	
+	public void inCheckMove(String checkMessage){
+		System.out.println("This will try to move out of check!");
+		String[] split = checkMessage.split(",");
 		
+		System.out.printf("I am checked by piece (%c,%c)", checkMessage.charAt(14), checkMessage.charAt(16));
+		
+		Move move = takePiece((int)checkMessage.charAt(14), (int)checkMessage.charAt(16));
+		if(move == null){
+			move = saveKing();
+			
+		}
+	}
+	
+	// This will be called to try and get out of check!
+	public Move takePiece(int x, int y){
+		List<Move> moves = new ArrayList<Move>();
+		Move bestMove = null;
+		
+		
+		return bestMove;
+	}
+	
+	// Move king out of check!
+	public Move saveKing(){
+		Move bestMove = null;
+		
+		return bestMove;
 	}
 	
 	
@@ -50,12 +82,12 @@ public class AIManager {
 		
 		Random r = new Random();
 		int n = r.nextInt(moves.size()-1)+1;
-		System.out.println("Selected move number: " + n);
+		//System.out.println("Selected move number: " + n);
 		moves.get(n).printMove();
 		while(model.allowedMove(moves.get(n).x1, moves.get(n).y1, moves.get(n).x2, moves.get(n).y2) == false){
-			System.out.println("Move denied");
+			//System.out.println("Move denied");
 			n = r.nextInt(moves.size());
-			System.out.println("Selected move number: " + n);
+			//System.out.println("Selected move number: " + n);
 			moves.get(n).printMove();
 		}
 		
@@ -66,19 +98,9 @@ public class AIManager {
 	
 	
 	public List<Move> getMoves(){
-		//Piece[][] allSquares = board.getPositions();
 		List<Move> moves = new ArrayList<Move>();
 		for(int i=0; i<8; i++){
-			//System.out.println("Searching x pos = " + i);
-			for(int j=0; j<8; j++){
-				//System.out.println("Searching y pos = " + j);
-				//System.out.println("Filled = " + board.isFilled(i, j));
-				//if(board.isFilled(i, j)){
-				//	System.out.println("Piece color =" +board.findPiece(i, j).getColor() );
-				////	System.out.println("AI color =" +AIColor );
-				//	System.out.println("Color is correct = " + (board.findPiece(i, j).getColor() == AIColor));	
-				//}
-				//			
+			for(int j=0; j<8; j++){	
 				if(board.isFilled(i, j) && board.findPiece(i, j).getColor() == AIColor){
 					moves.addAll(getMovesForPiece(board.findPiece(i,j)));
 				}
@@ -94,6 +116,7 @@ public class AIManager {
 		System.out.println("Searching for moves for piece (" + p.getX() + "," + p.getY() + ") of type " + p.getType());
 		// About 86 moves max. Meaning we have evaluate 86 positions!
 		Move newMove;
+		int n;
 		switch(p.getType()){
 			case "Pawn":
 				
@@ -187,24 +210,153 @@ public class AIManager {
 				
 			case "Bishop":
 				//UpTo 13 moves i think
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0  && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
 				break;
 				
 			case "Rook":
 				//UpTo 14 moves i think
+				n = 1;
+				while(p.getX()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				
+				
 				break;
 				
 			case "Queen":
 				//UpTo 27 moves i think
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0  && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				while(p.getX()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
 				break;
 				
 			case "King":
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY());
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY());
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
 				//UpTo 8 moves
 				break;
 		
 		}
 		
 		
-		System.out.println("Number of moves added for this piece = " + moves.size());
+		//System.out.println("Number of moves added for this piece = " + moves.size());
 		return moves;
 		
 	}
