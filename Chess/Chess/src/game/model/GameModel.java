@@ -44,7 +44,6 @@ public class GameModel extends Observable {
 	
 	
 	public String movePiece(int x1,int y1, int x2, int y2){
-		System.out.println("movePiece requested! ");
 		if(move == Color.WHITE){
 			System.out.println("Turn = White");
 			if(board.isFilled(x1,y1) && board.findPiece(x1, y1).getColor() != Color.WHITE){
