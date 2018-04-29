@@ -20,8 +20,9 @@ public class AIManager {
 	public AIManager(GameModel m){
 		model = m;
 		board = model.getBoard();
-		boardAnalyser = new BoardAnalyser(board);
+
 		AIColor = Color.BLACK;
+		boardAnalyser = new BoardAnalyser(board, AIColor);
 	}
 	
 	
@@ -30,6 +31,7 @@ public class AIManager {
 	
 	
 	public void move(){
+		System.out.println(boardAnalyser.rateBoardBasic());
 		Move move = generateMove();
 		String result =model.movePiece(move.x1, move.y1, move.x2, move.y2);
 		if(result.contains("InCheck")){
@@ -80,20 +82,32 @@ public class AIManager {
 			return null;
 		}
 		
-		Random r = new Random();
-		int n = r.nextInt(moves.size()-1)+1;
-		//System.out.println("Selected move number: " + n);
-		moves.get(n).printMove();
-		while(model.allowedMove(moves.get(n).x1, moves.get(n).y1, moves.get(n).x2, moves.get(n).y2) == false){
-			//System.out.println("Move denied");
-			n = r.nextInt(moves.size());
-			//System.out.println("Selected move number: " + n);
-			moves.get(n).printMove();
+		
+		// Find best valued move.
+		int bestMoveValue = -1;
+		Move bestMove = null;
+		for(int n=0; n<moves.size(); n++){
+			if(model.allowedMove(moves.get(n).x1, moves.get(n).y1, moves.get(n).x2, moves.get(n).y2) == true){
+				if(boardAnalyser.rateMove(moves.get(n)) > bestMoveValue){
+					bestMoveValue = boardAnalyser.rateMove(moves.get(n));
+					bestMove = moves.get(n);
+				}
+			}
+		}
+		
+		// If there is no best valued move, do something random!
+		if(bestMoveValue == 0){
+			Random r = new Random();
+			int n = r.nextInt(moves.size())+1;
+			while(model.allowedMove(moves.get(n).x1, moves.get(n).y1, moves.get(n).x2, moves.get(n).y2) == false){
+				n = r.nextInt(moves.size());
+			}
+			return moves.get(n);
 		}
 		
 		
 		System.out.println("AI Moved!");
-		return moves.get(n);
+		return bestMove;
 	}
 	
 	

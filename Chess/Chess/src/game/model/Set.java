@@ -89,4 +89,36 @@ public class Set {
 		
 	}
 	
+	
+	public int getValue(){
+		int value = 0;
+		for(int i=0;i< pieces.size(); i++){
+			value+=Set.valuePiece(pieces.get(i));
+		}
+		return value;
+	}
+	
+	public static int valuePiece(Piece p){
+		if(p == null){
+			return 0;
+		}
+		switch(p.getType()){
+			case "Pawn":
+				return 1;
+			case "Horse":
+				return 3;
+			case "Bishop":
+				return 3;
+			case "Rook":
+				return 5;
+			case "Queen":
+				return 8;
+			case "King":
+				return 10000;
+			default:
+				return 0;
+		}
+	}
+	
+	
 }
