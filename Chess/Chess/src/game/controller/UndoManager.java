@@ -49,4 +49,21 @@ public class UndoManager {
 		undo.push(operation);
 	}
 	
+	public String getMoves(){
+		Stack<AbstractUndoableEdit> temp = new Stack<AbstractUndoableEdit>();
+		String output = new String();
+		while(undo.empty() != true){
+			AbstractUndoableEdit operation = undo.pop();
+			
+			temp.push(operation);
+		}
+		while(temp.empty() != true){
+			AbstractUndoableEdit operation = temp.pop();
+			MoveOperation op = (MoveOperation)operation;
+			output += op.getInformation() + "\n";
+			undo.push(operation);
+		}
+		
+		return output;
+	}
 }

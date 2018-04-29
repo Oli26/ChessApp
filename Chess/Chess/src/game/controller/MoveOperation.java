@@ -28,7 +28,9 @@ public class MoveOperation extends AbstractUndoableEdit {
 		
 	}
 	
-	
+	public String getInformation(){
+		return "("+oldX+","+oldY+")->("+newX+","+newY+")";
+	}
 	
 	public void undo(){
 		board.movePiece(newX, newY, oldX, oldY);

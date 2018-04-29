@@ -401,7 +401,7 @@ public class GameModel extends Observable {
 
 			JComboBox<String> box1 = new JComboBox<String>(options);
 		    box1.setVisible(true);
-			panel.add(new JLabel("Vertex"));
+			panel.add(new JLabel("Select promotion"));
 			panel.add(box1);
 			
 			JOptionPane.showConfirmDialog(null, panel, "Premote your pawn.", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);

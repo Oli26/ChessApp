@@ -8,6 +8,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 
 import game.controller.GameController;
+import game.controller.ViewGameController;
 import game.model.GameModel;
 import game.model.Piece;
 
@@ -18,6 +19,14 @@ public class GamePanel extends JPanel implements Observer {
 		model = m;
 		controller = c;
 		controller.addObserver(this);
+		model.addObserver(this);
+        setBackground(new Color(200, 200, 200));
+        setVisible(true);
+        setOpaque(true);
+    }
+	public GamePanel(ViewGameController c,GameModel m) {
+		model = m;
+		c.addObserver(this);
 		model.addObserver(this);
         setBackground(new Color(200, 200, 200));
         setVisible(true);
