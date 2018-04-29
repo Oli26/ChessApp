@@ -37,12 +37,12 @@ public class AIManager {
 	
 	
 	public void getMoves(){
-		Piece[][] allSquares = board.getPositions();
+		//Piece[][] allSquares = board.getPositions();
 		List<Move> moves = new ArrayList<Move>();
 		for(int i=0; i<9; i++){
 			for(int j=0; j<9; j++){
 				if(board.isFilled(i, j) && board.findPiece(i, j).getColor() == AIColor){
-					getMovesForPiece(board.findPiece(i,j));
+					moves.addAll(getMovesForPiece(board.findPiece(i,j)));
 				}
 				
 			}
@@ -52,6 +52,31 @@ public class AIManager {
 	public List<Move> getMovesForPiece(Piece p){
 		List<Move> moves = new ArrayList<Move>();
 		
+		switch(p.getType()){
+			case "Pawn":
+				
+				break;
+			case "Horse":
+				
+				break;
+				
+			case "Bishop":
+				
+				break;
+				
+			case "Rook":
+				
+				break;
+				
+			case "Queen":
+				
+				break;
+				
+			case "King":
+				
+				break;
+		
+		}
 		
 		
 		
