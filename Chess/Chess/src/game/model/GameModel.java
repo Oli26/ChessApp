@@ -44,8 +44,9 @@ public class GameModel extends Observable {
 	
 	
 	public void movePiece(int x1,int y1, int x2, int y2){
-
+		System.out.println("movePiece requested! ");
 		if(move == Color.WHITE){
+			System.out.println("Turn = White");
 			if(board.isFilled(x1,y1) && board.findPiece(x1, y1).getColor() != Color.WHITE){
 				return;
 			}
@@ -54,10 +55,10 @@ public class GameModel extends Observable {
 				board.undoTempMovePiece(x1, y1, x2, y2);
 				return;
 			}else{
-					board.undoTempMovePiece(x1, y1, x2, y2);
+				board.undoTempMovePiece(x1, y1, x2, y2);
 			}
 		}else{
-			
+			System.out.println("Turn = Black");
 			if(board.isFilled(x1,y1) && board.findPiece(x1, y1).getColor() != Color.BLACK){
 				return;
 			}
@@ -71,7 +72,6 @@ public class GameModel extends Observable {
 				
 					
 		}	
-		
 		
 		Piece p = board.findPiece(x1,y1);	
 		// Castling special case //
@@ -177,33 +177,48 @@ public class GameModel extends Observable {
 			
 		}
 		
-		
 			
 		if(allowedMove(x1,y1,x2,y2)){
-
+			System.out.println("Move requested and allowed! x1 = " + x1 + ", y1 = " + y1 + ", x2 = " + x2 + ", y2 = " + y2);
 			AbstractUndoableEdit op = new MoveOperation(board,x1,y1,x2,y2);
 			manager.newOperation(op);
 			manager.resetRedo();
 			checkPawns(move);
 			if(move == Color.WHITE){
-				
+				move = Color.BLACK;
 				if(gameType==2){
 					AI.move();
-					move = Color.WHITE;
-				}else{
-					move = Color.BLACK;
 				}
 			}else{
 				move = Color.WHITE;
 			}
 			
+		}else{
+			System.out.println("Move requested and not allowed!");
 		}
 		
 	}
 	
 	public boolean allowedMove(int x1,int y1,int x2,int y2){
-		
+		//System.out.println("Called with (" + x1 + "," + y1 + "-(" + x2+ "," + y2 + ")");
+		if(x1 < 0 || x1 > 7){
+			return false;
+		}
+		if(y1 < 0 || y1 > 7){
+			return false;
+		}
+		if(x2 < 0 || x2 > 7){
+			return false;
+		}
+		if(y2 < 0 || y2 > 7){
+			return false;
+		}
 		Piece p = board.findPiece(x1,y1);
+		if(p == null){
+			return false;
+		}
+		
+		
 		//Piece op = board.findPiece(x2, y2);
 		
 

@@ -126,11 +126,26 @@ public class Board {
 	
 	
 	public Piece findPiece(int x, int y){
-		return pieces[x][y];
+		if(isFilled(x,y)){
+			return pieces[x][y];
+		}else{
+			return null;
+		}
+		
 		
 	}
 	
 	public boolean isFilled(int x, int y){
+		// Don't allow moves outside of board
+		if(x < 0 || x > 7){
+			return true;
+		}
+		if(y < 0 || y > 7){
+			return true;
+		}
+		
+		
+		// test to see if filled
 		if(pieces[x][y] == null){
 			return false;
 		}
