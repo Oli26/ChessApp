@@ -1,7 +1,7 @@
 package AI;
 
 public class Move {
-	int x1,x2,y1,y2;
+	public int x1,x2,y1,y2;
 	public Move(int xOne, int yOne, int xTwo, int yTwo){
 		x1 = xOne;
 		x2 = xTwo;

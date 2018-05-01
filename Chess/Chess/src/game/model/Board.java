@@ -42,8 +42,8 @@ public class Board {
 		pieces[6][0] = whiteSet.getPiece(9);  // second horse
 		pieces[2][0] = whiteSet.getPiece(10); // first bishop
 		pieces[5][0] = whiteSet.getPiece(11); // second bishop
-		pieces[3][0] = whiteSet.getPiece(14); // queen
-		pieces[4][0] = whiteSet.getPiece(15); // king 
+		pieces[4][0] = whiteSet.getPiece(14); // queen
+		pieces[3][0] = whiteSet.getPiece(15); // king 
 		
 	}
 	
@@ -58,8 +58,8 @@ public class Board {
 		pieces[6][7] = blackSet.getPiece(9);  // second horse
 		pieces[2][7] = blackSet.getPiece(10); // first bishop
 		pieces[5][7] = blackSet.getPiece(11); // second bishop
-		pieces[3][7] = blackSet.getPiece(14); // queen
-		pieces[4][7] = blackSet.getPiece(15); // king 
+		pieces[4][7] = blackSet.getPiece(14); // queen
+		pieces[3][7] = blackSet.getPiece(15); // king 
 	}
 	
 	public Set getSet(Color c){

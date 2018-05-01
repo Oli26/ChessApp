@@ -1,6 +1,8 @@
 package game.model;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JComboBox;
@@ -9,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import AI.AIManager;
+import AI.Move;
 import game.controller.AbstractUndoableEdit;
 import game.controller.CastleOperation;
 import game.controller.MoveOperation;
@@ -434,6 +437,309 @@ public class GameModel extends Observable {
 		}
 	}
 	
+	public List<Move> getMoves(Color color){
+		List<Move> moves = new ArrayList<Move>();
+		for(int i=0; i<8; i++){
+			for(int j=0; j<8; j++){	
+				if(board.isFilled(i, j) && board.findPiece(i, j).getColor() == color){
+					moves.addAll(getMovesForPiece(board.findPiece(i,j), color));
+				}
+				
+			}
+		}
+		return moves;
+	}
+	
+	// This will return possible moves in the abstract, but will not account for the positioning of the board or checking etc.
+	public List<Move> getMovesForPiece(Piece p, Color color){
+		List<Move> moves = new ArrayList<Move>();		
+		Move newMove;
+		int n;
+		switch(p.getType()){
+			case "Pawn":
+				
+				// UpTo 4 moves (6 including en pessant)
+				
+				
+				// If is hasn't moved it can move two forward.
+				if(p.hasMoved() == false){
+					if(color == Color.BLACK){
+						newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-2);
+					}else{
+						newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+2);
+					}
+					moves.add(newMove);
+				}	
+				// Move one forward
+				if(color == Color.BLACK){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-1);
+				}else{
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+1);
+				}
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				
+				
+				// Attack left
+				if(color == Color.BLACK){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()-1);
+					if(onBoard(newMove)){
+						moves.add(newMove);
+					}
+					newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()-1);
+					if(onBoard(newMove)){
+						moves.add(newMove);
+					}
+				}else{
+					newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()+1);
+					if(onBoard(newMove)){
+						moves.add(newMove);
+					}
+					newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()+1);
+					if(onBoard(newMove)){
+						moves.add(newMove);
+					}
+					
+				}
+					
+				
+				
+
+				break;
+			case "Horse":
+				//UpTo 8 moves in a circle around
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()+2);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()+2);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()-2);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()-2);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+2, p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-2, p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+2, p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-2, p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				
+				
+				
+				break;
+				
+			case "Bishop":
+				//UpTo 13 moves i think
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0  && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				break;
+				
+			case "Rook":
+				//UpTo 14 moves i think
+				n = 1;
+				while(p.getX()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				
+				
+				break;
+				
+			case "Queen":
+				//UpTo 27 moves i think
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()+n < 7 && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0 && p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0  && p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				while(p.getX()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX()+n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getX()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX()-n, p.getY());
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()+n < 7){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+n);
+					moves.add(newMove);
+					n++;
+				}
+				n = 1;
+				while(p.getY()-n >= 0){
+					newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-n);
+					moves.add(newMove);
+					n++;
+				}
+				break;
+				
+			case "King":
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY());
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()+1, p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX(), p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY());
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()+1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				newMove = new Move(p.getX(), p.getY(), p.getX()-1, p.getY()-1);
+				if(onBoard(newMove)){
+					moves.add(newMove);
+				}
+				//UpTo 8 moves
+				break;
+		
+		}
+		
+		
+		//System.out.println("Number of moves added for this piece = " + moves.size());
+		return moves;
+		
+	}
+	
+	public boolean onBoard(Move m){
+		if(m.x2 < 0 || m.x2 > 7){
+			return false;
+		}
+		if(m.y2 < 0 || m.y2 > 7){
+			return false;
+		}
+		return true;
+	}
+	
+	
+	public boolean isBlocked(Move m){
+		int xDiff = Math.abs(m.x1 - m.x2);
+		int yDiff = Math.abs(m.y1 - m.y2);
+		
+		if(xDiff == yDiff){
+			for(int i = 1; i<xDiff; i++){
+				if(board.isFilled(Math.min(m.x2, m.x1)+i, Math.min(m.y1, m.y2)+i)){
+					return true;
+				}
+			}
+		}
+		
+		if(xDiff == 0){
+			for(int i = 1; i<yDiff; i++){
+				if(board.isFilled(m.x1, Math.min(m.y1, m.y2)+i)){
+					return true;
+				}
+			}
+			
+		}
+		if(yDiff == 0){
+			for(int i = 1; i<xDiff; i++){
+				if(board.isFilled(Math.min(m.x2, m.x1)+i, m.y1)){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 	
 	
 }

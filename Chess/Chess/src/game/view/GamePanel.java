@@ -42,6 +42,20 @@ public class GamePanel extends JPanel implements Observer {
 		  Piece[][] pieces = model.getBoard().getPositions();
 		  for(Piece[] r : pieces){
 			  for(Piece p: r){
+				  
+				  if((i+j)%2 == 0){
+					  g.setColor(Color.WHITE);
+				  }else{
+					  g.setColor(Color.GRAY);
+				  }
+				  g.fillRect(i*65, j*65, 60, 60);
+				  //g.drawRect(i*65, j*65, 60, 60);
+				  g.setColor(Color.BLACK);
+				  
+				  
+				  
+				  
+				  
 				  if(p != null){
 					  if(p.isSelected()){
 						  g.setColor(Color.RED);
@@ -54,7 +68,6 @@ public class GamePanel extends JPanel implements Observer {
 					 // g.drawString("p", p.getX()*65+30,p.getY()*65+30);
 					  
 				  }
-				  g.drawRect(i*65, j*65, 60, 60);
 				  j++;
 				  if(j==8){
 					  j=0;

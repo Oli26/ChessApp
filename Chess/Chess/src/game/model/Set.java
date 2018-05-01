@@ -26,8 +26,8 @@ public class Set {
 			pieces.add(new Bishop(c,5,0));
 			pieces.add(new Rook(c,0,0));
 			pieces.add(new Rook(c,7,0));
-			pieces.add(new Queen(c,3,0));
-			pieces.add(new King(c,4,0));
+			pieces.add(new Queen(c,4,0));
+			pieces.add(new King(c,3,0));
 			
 			
 			
@@ -41,8 +41,8 @@ public class Set {
 			pieces.add(new Bishop(c,5,7));
 			pieces.add(new Rook(c,0,7));
 			pieces.add(new Rook(c,7,7));
-			pieces.add(new Queen(c,3,7));
-			pieces.add(new King(c,4,7));
+			pieces.add(new Queen(c,4,7));
+			pieces.add(new King(c,3,7));
 			
 			
 		}
